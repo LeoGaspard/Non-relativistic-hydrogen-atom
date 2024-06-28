@@ -106,11 +106,13 @@ if __name__=="__main__":
     ax.set_ylabel('y (m)',size=20)
     ax.set_zlabel('z (m)',size=20)
     ax.set_title('Real orbital : %i%s$_%i$'%(n,orbname[l],m),size=20)
-    p = ax.scatter(X,Y,Z,c=c,s=2,cmap='bwr')
+    ax.set_axis_off()
+    p = ax.scatter(X,Y,Z,c=c,s=20,cmap='bwr')
+    ax.view_init(elev=0, azim=0, roll=0)
     fig.tight_layout()
 #   c = fig.colorbar(p,ax=ax)
 #   c.ax.set_ylabel("Sign of $\Psi$")
 
     print(maxaccep)
 
-    plt.show()
+    plt.savefig("/home/leogaspard/Documents/Code/leogaspard.github.io/assets/4f0.png")

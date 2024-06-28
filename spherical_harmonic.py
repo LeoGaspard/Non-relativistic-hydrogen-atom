@@ -1,7 +1,7 @@
 import numpy as np
+import math
 import scipy.special as sp
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
+import matplotlib.pyplot as plt
 
 def sph2cart(r,theta,phi):
     X = r*np.sin(theta)*np.cos(phi)
@@ -11,7 +11,7 @@ def sph2cart(r,theta,phi):
     return X,Y,Z
 
 def Ylm(l,m,theta,phi):
-    n = np.sqrt((2*l+1)/(4*np.pi) * (np.math.factorial(l-np.abs(m)))/(np.math.factorial(l+np.abs(m)))) # Eq. 36
+    n = np.sqrt((2*l+1)/(4*np.pi) * (math.factorial(l-np.abs(m)))/(math.factorial(l+np.abs(m)))) # Eq. 36
 
     leg = sp.lpmv(np.abs(m),l,np.cos(theta))
 
@@ -24,29 +24,34 @@ if __name__ == "__main__":
 
     theta = np.arange(0,np.pi+np.pi/50,np.pi/50)
     phi = np.arange(0,2*np.pi+np.pi/50, np.pi/50)
-
     theta, phi = np.meshgrid(theta,phi)
-
-    fig = make_subplots(rows=3,cols=5,specs=[[{'type':'surface'},{'type':'surface'},{'type':'surface'},{'type':'surface'},{'type':'surface'}]
-        ,[{'type':'surface'},{'type':'surface'},{'type':'surface'},{'type':'surface'},{'type':'surface'}]
-        ,[{'type':'surface'},{'type':'surface'},{'type':'surface'},{'type':'surface'},{'type':'surface'}]])
-
+    fig, ax = plt.subplots(nrows=3, ncols=5, subplot_kw={'projection': '3d'}, figsize=(10, 10))
     for l in [0,1,2]:
         for m in range(-l,l+1):
             Yl = Ylm(l,m,theta,phi)
             X,Y,Z = sph2cart(np.abs(Yl)**2,theta,phi)
-            fig.add_trace(go.Surface(x=X,y=Y,z=Z,colorscale='HSV',colorbar={"title":"Phase"},surfacecolor=np.angle(Yl),showscale=True, cmax=np.pi, cmin=-np.pi, cmid = 0,meta="$Y_{%i}^{%i}$"%(l,m)),row=l+1,col=m+3)
+            surf = ax[l, l+m + 2 - l].plot_surface(X, Y, Z, cmap="coolwarm")
 
-    fig.update_layout(scene3_aspectmode='cube')
-    fig.update_layout(scene7_aspectmode='cube')
-    fig.update_layout(scene8_aspectmode='cube')
-    fig.update_layout(scene9_aspectmode='cube')
-    fig.update_layout(scene11_aspectmode='cube')
-    fig.update_layout(scene12_aspectmode='cube')
-    fig.update_layout(scene13_aspectmode='cube')
-    fig.update_layout(scene14_aspectmode='cube')
-    fig.update_layout(scene15_aspectmode='cube')
-    fig.update_scenes(xaxis=dict({'visible':False}),yaxis=dict({'visible':False}),zaxis=dict({'visible':False}))
-    fig.show()
+    for i in ax.flatten():
+        i.set_xticks([])
+        i.set_yticks([])
+        i.set_zticks([])
+        i.xaxis.set_pane_color((1,1,1,0))
+        i.yaxis.set_pane_color((1,1,1,0))
+        i.zaxis.set_pane_color((1,1,1,0))
+        i.set_axis_off()
 
-    fig.write_html("complex_spherical_harmonics.html")
+    for i in range(5):
+        ax[0,i].set_title(f"{i-2:2.0f}", fontsize="20", weight="bold")
+
+    fig.text(0.05, 0.82, "0", fontsize="20", weight="bold")
+    fig.text(0.05, 0.52, "1", fontsize="20", weight="bold")
+    fig.text(0.05, 0.22, "2", fontsize="20", weight="bold")
+
+    fig.text(0.5, 0.95, "m", fontsize="20", weight="bold")
+    fig.text(0.01, 0.5, "l", fontsize="20", weight="bold")
+
+
+    fig.subplots_adjust(top=0.95, bottom=0.1, left=0.1, right=0.95, wspace=0.00, hspace=0.00)
+
+    plt.savefig("/home/leogaspard/Documents/Code/leogaspard.github.io/assets/complex_spherical_harmonics.png", transparent=True)

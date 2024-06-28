@@ -4,6 +4,23 @@ from math import factorial
 
 import matplotlib.pyplot as plt
 
+import matplotlib as mpl
+from cycler import cycler
+
+yellow = "#E8F086"
+green  = "#6FDE64"
+red    = "#FF4242"
+purple = "#A020F0"
+blue   = "#235FA4"
+marine = "#0A284B"
+orange = "#FF934F"
+sand   = "#E1DAAE"
+cyan   = "#058ED9"
+
+mpl.rcParams['font.size'] = 20
+mpl.rcParams['axes.prop_cycle'] = cycler('color', [blue, red, green, orange, purple, yellow, marine, sand, cyan])
+
+
 def radial(r,n,l):
     # Eq. 81
     N = np.sqrt(factorial(n-l-1)/(2*n*factorial(n+l)))*(2/(n*a))**(l+1.5)
@@ -37,13 +54,13 @@ if __name__=="__main__":
     for i in range(len(R)):
         B = B + R[i]**2*R10[i]**2*step
 
-    fig, axes = plt.subplots(3,2,sharex=True)
+    fig, axes = plt.subplots(nrows=3,ncols=2,figsize=(11, 16),sharex=True)
 
     for i in range(4):
         for k in range(i):
-            axes[i-1][0].plot(R/a,radial(R,i,k)*a**(3/2),label="%i%s"%(i,d[k+1]))
-            axes[i-1][1].plot(R/a,a*R**2*np.abs(radial(R,i,k))**2)
-            axes[i-1][0].legend()
+            axes[i-1][0].plot(R/a,radial(R,i,k)*a**(3/2),label="%i%s"%(i,d[k+1]), lw=2)
+            axes[i-1][1].plot(R/a,a*R**2*np.abs(radial(R,i,k))**2, lw=2)
+            axes[i-1][0].legend(frameon=False)
             axes[i-1][0].set_ylabel("$R_{n,l}(r)\\times a_\mu^{3/2}$")
             axes[i-1][1].set_ylabel("$r^2 |R_{n,l}(r)|^2 \\times a_\mu$")
             axes[i-1][0].axhline(color='black',linewidth=0.5)
@@ -55,9 +72,8 @@ if __name__=="__main__":
                 axes[i-1][0].set_xlabel("$r/a_\mu$")
                 axes[i-1][1].set_xlabel("$r/a_\mu$")
 
-    plt.tight_layout()
-    plt.show()
-#   plt.savefig("radial_function.png")
+    fig.subplots_adjust(top=0.9, bottom=0.2, left=0.2, right=0.9, hspace=0.4, wspace=0.5)
+    plt.savefig("/home/leogaspard/Documents/Code/leogaspard.github.io/assets/radial_function.png")
 
 
 

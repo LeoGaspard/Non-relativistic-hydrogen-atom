@@ -3,6 +3,22 @@ from numpy import pi
 
 import matplotlib.pyplot as plt
 
+import matplotlib as mpl
+from cycler import cycler
+
+yellow = "#E8F086"
+green  = "#6FDE64"
+red    = "#FF4242"
+purple = "#A020F0"
+blue   = "#235FA4"
+marine = "#0A284B"
+orange = "#FF934F"
+sand   = "#E1DAAE"
+cyan   = "#058ED9"
+
+mpl.rcParams['font.size'] = 20
+mpl.rcParams['axes.prop_cycle'] = cycler('color', [blue, red, green, orange, purple, yellow, marine, sand, cyan])
+
 
 def E(n):
     return fac/(n**2)
@@ -76,6 +92,5 @@ ax.set_xlabel("Wavelength (nm)",size=20)
 ax.set_xscale("log")
 ax.set_title("The hydrogen spectral series",size=20)
 
-
-
-plt.show()
+fig.tight_layout()
+plt.savefig("/home/leogaspard/Documents/Code/leogaspard.github.io/assets/spectral_series.png")
